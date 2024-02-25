@@ -1,27 +1,102 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import './Form.css';
 const Form = () => {
+  const [inputValues, setInputValues] = useState({
+    userName: '',
+    userEmail: '',
+    projectName: '',
+    allCheckboxes: [],
+    linkProject: '',
+    deadlineOptions: '',
+    numberOfTemplates: '',
+    budget: '',
+    description: '',
+    isError: [],
+  });
+  const handleOnChangeSingleInputType = (e) => {
+    let inputName = e.target.name;
+    let inputValue = e.target.value;
+    setInputValues({ ...inputValues, [inputName]: inputValue });
+  };
+  const handleOnChangeGroupInputType = (e) => {
+    let isChecked = e.target.checked;
+    let checkboxValue = e.target.value;
+    if (isChecked) {
+      setInputValues({
+        ...inputValues,
+        allCheckboxes: [...inputValues.allCheckboxes, checkboxValue],
+      });
+    } else {
+      setInputValues({
+        ...inputValues,
+        allCheckboxes: inputValues.allCheckboxes.filter(
+          (item) => item !== checkboxValue
+        ),
+      });
+    }
+  };
+  const handleSubmitForm = (e) => {
+    e.preventDefault();
+    const inputRequired = [
+      'userName',
+      'userEmail',
+      'projectName',
+      'allCheckboxes',
+      'linkProject',
+      'deadlineOptions',
+      'numberOfTemplates',
+      'budget',
+      'description',
+    ];
+    for (let i = 0; i < inputRequired.length; i++) {
+      if (
+        inputValues[inputRequired[i]] === '' ||
+        inputValues[inputRequired[i]].length === 0
+      ) {
+        setInputValues({ ...inputValues, isError: true });
+        toast.error('This filed is required: ' + inputRequired[i]);
+        return;
+      }
+    }
+    toast.success('Form submitted successfully !');
+  };
   return (
-    <form className='form'>
+    <form className='form' onSubmit={(e) => handleSubmitForm(e)}>
       <h1 className='form-header'>Request for proposal</h1>
       <div className='inputs-container'>
         <div className='form-group'>
           <label htmlFor='userName' className='label-fluid'>
             Name
           </label>
-          <input type='text' name='userName' className='form-control' />
+          <input
+            type='text'
+            name='userName'
+            className='form-control'
+            onChange={(e) => handleOnChangeSingleInputType(e)}
+          />
         </div>
         <div className='form-group'>
           <label htmlFor='email' className='label-fluid'>
             Email
           </label>
-          <input type='email' name='userEmail' className='form-control' />
+          <input
+            type='email'
+            name='userEmail'
+            className='form-control'
+            onChange={(e) => handleOnChangeSingleInputType(e)}
+          />
         </div>
         <div className='form-group'>
           <label htmlFor='email' className='label-fluid'>
             Business or project name
           </label>
-          <input type='text' name='projectName' className='form-control' />
+          <input
+            type='text'
+            name='projectName'
+            className='form-control'
+            onChange={(e) => handleOnChangeSingleInputType(e)}
+          />
         </div>
         {/* Checkbox Section */}
         <div className='form-group'>
@@ -36,6 +111,7 @@ const Form = () => {
                 className='form-control'
                 id='figma-webflow'
                 value='figma-webflow'
+                onChange={(e) => handleOnChangeGroupInputType(e)}
               />
               <label htmlFor='figma-webflow'>Figma to Webflow</label>
             </div>
@@ -46,6 +122,7 @@ const Form = () => {
                 className='form-control'
                 id='animation-design'
                 value='animation-design-build'
+                onChange={(e) => handleOnChangeGroupInputType(e)}
               />
               <label htmlFor='animation-design'>Animation Design & Build</label>
             </div>
@@ -56,6 +133,7 @@ const Form = () => {
                 className='form-control'
                 id='audit-fix'
                 value='audit-fix'
+                onChange={(e) => handleOnChangeGroupInputType(e)}
               />
               <label htmlFor='audit-fix'>Audit & Fix</label>
             </div>
@@ -66,6 +144,7 @@ const Form = () => {
                 className='form-control'
                 id='question'
                 value='question-logic-integration'
+                onChange={(e) => handleOnChangeGroupInputType(e)}
               />
               <label htmlFor='question'>Question Logic & Integrations</label>
             </div>
@@ -81,6 +160,7 @@ const Form = () => {
             name='linkProject'
             className='form-control'
             id='link-project'
+            onChange={(e) => handleOnChangeSingleInputType(e)}
           />
         </div>
         <section className='three-part'>
@@ -88,7 +168,11 @@ const Form = () => {
             <label htmlFor='deadline' className='label-fluid'>
               Deadline
             </label>
-            <select name='deadlineOptions' id='deadline-options'>
+            <select
+              name='deadlineOptions'
+              id='deadline-options'
+              onChange={(e) => handleOnChangeSingleInputType(e)}
+            >
               <option value='' className='option-control'>
                 Select option
               </option>
@@ -108,6 +192,7 @@ const Form = () => {
               type='number'
               name='numberOfTemplates'
               className='number-group'
+              onChange={(e) => handleOnChangeSingleInputType(e)}
             />
           </div>
           <div className='form-group' style={{ marginLeft: '85px' }}>
@@ -122,6 +207,7 @@ const Form = () => {
                   className='form-control'
                   id='hourly'
                   value='hourly'
+                  onChange={(e) => handleOnChangeSingleInputType(e)}
                 />
                 <label htmlFor='hourly'>Hourly</label>
               </div>
@@ -132,6 +218,7 @@ const Form = () => {
                   className='form-control'
                   id='percent'
                   value='percent'
+                  onChange={(e) => handleOnChangeSingleInputType(e)}
                 />
                 <label htmlFor='percent'>Less than $2%</label>
               </div>
@@ -142,6 +229,7 @@ const Form = () => {
                   className='form-control'
                   id='agency'
                   value='agency'
+                  onChange={(e) => handleOnChangeSingleInputType(e)}
                 />
                 <label htmlFor='agency'>Agency to Propose</label>
               </div>
@@ -158,6 +246,7 @@ const Form = () => {
             id='description'
             cols='30'
             rows='10'
+            onChange={(e) => handleOnChangeSingleInputType(e)}
           ></textarea>
         </div>
         <button type='submit' className='btn-submit'>
